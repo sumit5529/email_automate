@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils import timezone
 # Create your models here.
 # models.py
 
@@ -14,6 +14,37 @@ class Subscriber(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class EmailHistory(models.Model):
+    subscriber = models.ForeignKey(Subscriber, on_delete=models.CASCADE)
+    sender = models.EmailField()
+    recipient = models.EmailField()
+    subject = models.CharField(max_length=255)
+    body = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.subscriber.name
+    
+class NextEmailHistory(models.Model):
+    subscriber = models.ForeignKey(Subscriber, on_delete=models.CASCADE)
+    schedule_date = models.DateField(
+        
+        # label='Enter Date',
+        # widget=models.widgets.DateInput(attrs={'type': 'date'}),
+        # input_formats=['%Y-%m-%d']  # Adjust format as per your requirement
+       
+    )
+    
+    schedule_time = models.TimeField(
+       default=timezone.localtime(timezone.now()).time()
+        # label='Enter Time',
+        # widget=models.widgets.TimeInput(attrs={'type': 'time'}),
+        # input_formats=['%H:%M']  
+    ) 
+    periodic_gap_day = models.IntegerField()
+
 
 
 class EmailModel(models.Model):

@@ -3,11 +3,14 @@ from celery import Celery
 from celery import shared_task
 from django.core.mail import send_mail
 from datetime import datetime, timedelta
-from .models import Subscriber,EmailModel
+from .models import Subscriber,EmailModel,EmailHistory,NextEmailHistory
 from django.conf import settings
 from celery.schedules import crontab
 from celery.result import AsyncResult
 import json
+from django.utils import timezone
+from datetime import timedelta
+
 
 from django_celery_beat.models import PeriodicTask, IntervalSchedule
 
@@ -65,7 +68,19 @@ def send_weekly_email():
    
 
     for subs in subscribers:
+       
        print(subs.email)
+       user_id = subs.id
+       subsobj = Subscriber.objects.get(pk=user_id)
+    # Your task logic here
+      
+       EmailHistory.objects.create(
+            subscriber=subsobj,
+            sender=from_email,
+            recipient=subsobj.email,
+            subject=subsobj.subject,
+            body=subsobj.message_text
+         )
        recipient_list = [subs.email,]
 
        send_mail(subj, message, from_email, recipient_list)
@@ -79,9 +94,32 @@ def send_weekly_email():
 
 @shared_task
 def individual_periodic_task(user_id):
-    user = Subscriber.objects.get(pk=user_id)
+    subsobj = Subscriber.objects.get(pk=user_id)
     # Your task logic here
-    print(f"Executing task for user {user_id}")
+	
+
+    
+    from_email = settings.EMAIL_HOST_USER
+    EmailHistory.objects.create(
+            subscriber=subsobj,
+            sender=from_email,
+            recipient=subsobj.email,
+            subject=subsobj.subject,
+            body=subsobj.message_text
+        )
+    # subscriber = Subscriber.objects.get(id = user_id)
+    emailobj = NextEmailHistory.objects.filter(subscriber=subsobj).first()
+    recipient_list = [subsobj.email,]
+     
+    send_mail(subsobj.subject,subsobj.message_text,from_email,recipient_list)
+    gap = emailobj.periodic_gap_day
+    emailobj.schedule_time =  timezone.localtime(timezone.now() + timedelta(seconds=gap))
+    
+    emailobj.save()
+    
+    
+    
+   
 
 
 def individual_gap(primary_key,gap):

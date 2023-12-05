@@ -11,4 +11,6 @@ urlpatterns = [
     path('stop_email',views.stop_mail,name='stop_mail'),
     path('mail_individual/<int:id>/',views.mail_individual,name='mail_individual'),
     path('schedule_individual/<int:id>/',views.schedule_individual,name='schedule_individual'),
+    path('email_history/<int:id>/',views.email_history_for_subscriber,name='email_history'),
+    path('next_email_history/<int:id>/',views.Next_email_history,name='next_email_history'),
 ]

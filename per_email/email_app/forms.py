@@ -1,7 +1,7 @@
 # forms.py
 
 from django import forms
-from .models import Subscriber,EmailModel
+from .models import Subscriber,EmailModel,NextEmailHistory
 from django.contrib.admin.widgets import AdminDateWidget, AdminTimeWidget
 
 
@@ -12,6 +12,17 @@ class SubscriberForm(forms.ModelForm):
 
 
 class EmailForm(forms.Form):
+    #  class Meta:
+    #     model = NextEmailHistory
+    #     fields = ['schedule_date','schedule_time','periodic_gap_day']
+    #     widgets = {
+    #         'schedule_date': forms.DateInput(
+    #             attrs={'type': 'date', 'placeholder': 'yyyy-mm-dd', 'class': 'form-control'}
+    #         ),
+    #         'schedule_time': forms.TimeInput(
+    #             attrs={'type': 'time', 'placeholder': 'HH-MM-SS', 'class': 'form-control'}
+    #         )
+    #     }
     # subject = forms.CharField(widget=forms.Textarea(attrs={'rows': 2}))
     # message_text = forms.CharField(widget=forms.Textarea)
     schedule_date = forms.DateField(
@@ -23,7 +34,7 @@ class EmailForm(forms.Form):
     schedule_time = forms.TimeField(
         label='Enter Time',
         widget=forms.widgets.TimeInput(attrs={'type': 'time'}),
-        input_formats=['%H:%M']  
+        input_formats=['%H:%M:%S']  
     ) 
     periodic_gap_day = forms.IntegerField()
 

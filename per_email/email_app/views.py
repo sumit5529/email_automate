@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Subscriber,EmailModel
+from .models import Subscriber,EmailModel,EmailHistory,NextEmailHistory
 from .forms import SubscriberForm
 from django.contrib import messages
 from .forms import EmailForm,EmailContentForm,EmailIndividualForm
@@ -180,13 +180,37 @@ def schedule_individual(request,id):
          schedule_date = form.cleaned_data['schedule_date']
          schedule_time = form.cleaned_data['schedule_time']
          gap = form.cleaned_data['periodic_gap_day']
-         individual_gap(id,gap)
-         return redirect('list_subscriber')
+         subscriber = Subscriber.objects.get(id = id)
+         emailobj = NextEmailHistory.objects.filter(subscriber=subscriber).first()
+         if emailobj:
+             emailobj.schedule_date = schedule_date
+             emailobj.schedule_time =  schedule_time
+             emailobj.periodic_gap_day = gap
+             emailobj.save()
+         else:
+             NextEmailHistory.objects.create(subscriber=subscriber,schedule_date=schedule_date,
+                                             
+                                        schedule_time=schedule_time,periodic_gap_day = gap)
+         
+             
+        individual_gap(id,gap)
+        return redirect('list_subscriber')
         
     else:
         form = EmailForm()
 
     return render(request, 'email_app/email_form.html', {'form': form})
+
+
+def email_history_for_subscriber(request, id):
+    subscriber = Subscriber.objects.get(id=id)
+    email_history_entries = EmailHistory.objects.filter(subscriber=subscriber)
+    return render(request, 'email_app/email_history.html', {'subscriber': subscriber, 'email_history_entries': email_history_entries})
+
+def Next_email_history(request,id):
+    subscriber = Subscriber.objects.get(id=id)
+    email_history_entries= NextEmailHistory.objects.filter(subscriber=subscriber)
+    return render(request, 'email_app/next_email_history.html', {'subscriber': subscriber, 'email_history_entries': email_history_entries})
 
 
 
