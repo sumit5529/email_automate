@@ -1,0 +1,34 @@
+<style>
+    table, th, td {
+      border:1px solid black;
+    }
+    </style>
+  <table style="width:90% ",>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        {% comment %} <th>Phone</th> {% endcomment %}
+        {% comment %} <th>Actions</th> {% endcomment %}
+        <th>Update_Email</th>
+        <th>Schedule_Email</th>
+      </tr>
+      {% for subs in subscribers %}
+      <tr>
+        <td>{{ subs.name }}</td>
+        <td>{{ subs.email }}</td>
+        <td><a href="{% url 'mail_individual' subs.pk %}">Email</a></td>
+        <td><a href="{% url 'schedule_individual' subs.pk %}">Schedule</a></td>
+        {% comment %} <td>{{ cust.phone }}</td> 
+        <td> 
+          {% comment %} <a href="{% url 'customer_detail' customer.pk %}">View</a> {% endcomment %}
+          {% comment %} <a href="{% url 'customer:edit_customer' cust.pk %}">Edit</a>
+          <a href="{% url 'customer:delete_customer' cust.pk %}">Delete</a> 
+  
+         <a href = "#" class = "btn btn-outline-success"> Edit </a>
+          <a href="#"><button type="button" class="btn btn-outline-danger">Delete</button></a>
+  
+        </td>  {% endcomment %}
+       
+      </tr>
+      {% endfor %}
+    </table>
