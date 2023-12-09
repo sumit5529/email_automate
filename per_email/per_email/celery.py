@@ -18,16 +18,21 @@ app.autodiscover_tasks()
 
 # Define periodic task
 app.conf.beat_schedule = {
-    'send-weekly-email': {
-        'task': 'email_app.task.send_weekly_email',
-        'schedule': crontab(minute="*/5")
-        # 'args':('subject','message_text')
+    # 'send-weekly-email': {
+    #     'task': 'email_app.task.send_weekly_email',
+    #     'schedule': crontab(minute="*/5")
+    #     # 'args':('subject','message_text')
         
-    },
-    'individual-periodic-task':{
-        'task':'email_app.task.individual_periodic_task',
-        'schedule': crontab(minute="*/4"),
-        'args':(2,)
+    # },
+    # 'individual-periodic-task':{
+    #     'task':'email_app.task.individual_periodic_task',
+    #     'schedule': crontab(minute="*/4"),
+    #     'args':(2,)
+    # },
+    'checkscheduletask':{
+        'task':'email_app.task.checkschedule',
+        'schedule': crontab(minute="*/1"),
+        
     }
 }
 

@@ -13,15 +13,17 @@
         <th>Schedule_Email</th>
         <th>History</th>
         <th>ScheduleTime</th>
+        <th>EmailList<th>
       </tr>
       {% for subs in subscribers %}
       <tr>
         <td>{{ subs.name }}</td>
         <td>{{ subs.email }}</td>
-        <td><a href="{% url 'mail_individual' subs.pk %}">Email</a></td>
+        {% comment %} <td><a href="{% url 'mail_individual' subs.pk %}">Email</a></td> {% endcomment %}
         <td><a href="{% url 'schedule_individual' subs.pk %}">Schedule</a></td>
         <td><a href="{% url 'email_history' subs.pk %}">History</a></td>
         <td><a href="{% url 'next_email_history' subs.pk %}">NextScheduleTime</a></td>
+        <td><a href="{% url 'email_plus_schedulelist' subs.pk %}">TotalScheduleEmail</a></td>
         {% comment %} <td>{{ cust.phone }}</td> 
         <td> 
           {% comment %} <a href="{% url 'customer_detail' customer.pk %}">View</a> {% endcomment %}

@@ -1,8 +1,8 @@
 # forms.py
 
 from django import forms
-from .models import Subscriber,EmailModel,NextEmailHistory
-from django.contrib.admin.widgets import AdminDateWidget, AdminTimeWidget
+from .models import Subscriber,EmailModel,NextEmailHistory,EmailPlusScheduleModel
+from django.contrib.admin.widgets import AdminDateWidget
 
 
 class SubscriberForm(forms.ModelForm):
@@ -53,10 +53,33 @@ class EmailContentForm(forms.ModelForm):
       
     }
 
-class EmailIndividualForm(forms.ModelForm):
+# class EmailIndividualForm(forms.ModelForm):
+#     class Meta:
+#         model = Subscriber
+#         fields = ['subject', 'message_text']
+
+
+
+class EmailplusScheduleForm(forms.ModelForm):
     class Meta:
-        model = Subscriber
-        fields = ['subject', 'message_text']
+        model = EmailPlusScheduleModel
+        fields = ['subject','message_text','schedule_time','gap','frequency']
+
+
+        widgets = {
+        # 'subject': forms.TextInput(attrs={'rows': 2, 'cols': 20}),
+        # 'message_text': forms.Textarea(attrs={'rows': 5, 'cols': 20}),
+      
+         'schedule_time': forms.DateTimeInput(attrs={'class':'form-control','type': 'datetime-local'}),
+     
+
+         
+         'message_text': forms.Textarea(attrs={'rows': 5, 'cols': 20}),
+         
+     
+        
+      
+        }
 
 
 

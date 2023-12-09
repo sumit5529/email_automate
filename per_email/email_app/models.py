@@ -7,8 +7,8 @@ from django.utils import timezone
 class Subscriber(models.Model):
     name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
-    subject = models.CharField(max_length=255,default="subject")
-    message_text = models.CharField(max_length=255,default="text")
+    # subject = models.CharField(max_length=255,default="subject")
+    # message_text = models.CharField(max_length=255,default="text")
 
    
 
@@ -66,3 +66,18 @@ class EmailModel(models.Model):
 
     def __str__(self):
         return self.subject
+    
+
+
+class EmailPlusScheduleModel(models.Model):
+    subscriber = models.ForeignKey(Subscriber, on_delete=models.CASCADE)
+    subject = models.CharField(max_length=255,default="subject")
+    message_text = models.CharField(max_length=255,default="text")
+    # schedule_time = models.models.DateTimeField(default=timezone.localtime(timezone.now()).time())
+    schedule_time = models.DateTimeField()
+    gap = models.IntegerField()
+    frequency = models.IntegerField()
+
+    def __str__(self):
+        return self.subject + str(self.gap)
+    

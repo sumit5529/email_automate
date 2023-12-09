@@ -1,0 +1,28 @@
+<h1>Email History for {{ subscriber.name }}</h1>
+ <a href="{% url 'new_email' subscriber.pk %}">Create New</a>
+
+{% if EmailList %}
+ <style>
+    table, th, td {
+      border:1px solid black;
+    }
+    </style>
+  <table style="width:90% ",>
+      <tr>
+        <th>Change</th>
+        <th>View</th>
+      
+      </tr>
+      {% for eachemail in EmailList %}
+      <tr>
+        <td><a href="{% url 'ChangeEmailSchedule' eachemail.pk %}">Change</a></td>
+        <td><a href="{% url 'viewEmailSchedule' eachemail.pk %}">View</a></td>
+        
+       
+      </tr>
+      {% endfor %}
+    </table>
+
+{% else %}
+<h1> No mail for {{subscriber.name}} <h1>
+{%endif%}
