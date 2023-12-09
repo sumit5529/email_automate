@@ -1,7 +1,9 @@
 <!-- email_history_for_customer.html -->
-
+{% extends 'email_app/base.html'%}
+{% block body %}
 <h1>Email History for {{ subscriber.name }}</h1>
 
+{% if email_history_entries %}
 <ul>
     {% for entry in email_history_entries %}
         <li>
@@ -13,3 +15,9 @@
         </li>
     {% endfor %}
 </ul>
+{% else %}
+
+<h3> There is no History for {{ subscriber.name }}</h3>
+
+{% endif %}
+{% endblock %}

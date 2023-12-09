@@ -2,13 +2,11 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Subscriber,EmailModel,EmailHistory,NextEmailHistory,EmailPlusScheduleModel
+from .models import Subscriber,EmailHistory,EmailPlusScheduleModel
 
 admin.site.register(Subscriber)
-admin.site.register(EmailModel)
+
 admin.site.register(EmailHistory)
-admin.site.register(NextEmailHistory)
-# admin.site.register(EmailPlusScheduleModel)
 
 
 

@@ -1,10 +1,11 @@
+{% extends 'email_app/base.html' %}
 
-
-
-            
+{% block body %}
             <strong>Subject:</strong> {{EmailPlusScheduleobj.subject }}<br>
             <strong>Text:</strong> {{ EmailPlusScheduleobj.message_text }}<br>
             <strong>NextScheduleTime:</strong> {{EmailPlusScheduleobj.schedule_time}}<br>
             <strong>Gap:</strong> {{EmailPlusScheduleobj.gap }}<br>
             <strong>Rest Freq:</strong> {{EmailPlusScheduleobj.frequency }}<br>
+
+{% endblock %}
    

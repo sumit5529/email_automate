@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+
+<html>
+  <head>
+    <link rel="stylesheet" href="{% static 'email_app/style.css' %}" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark bg-dark">
+      <a href="#" class="navbar-brand">EmailAutomation</a>
+      <div class="navbar">
+        <a
+          class="nav-item mx-2 nav-link text-light"
+          href="{% url 'email_app:add_subscriber' %}"
+          >Add Subscriber
+        </a>
+        {% comment %} <a class="nav-item mx-2 nav-link text-light" href="#">Delete Item </a> {% endcomment %}
+        <a class="nav-item mx-2 nav-link text-light" href ="{% url 'email_app:list_subscriber' %}">Subscriber List </a>
+       
+        {% comment %} {% if user.is_authenticated%}
+        <a href = "{% url "logout"%}" class ="nav-item mx-2 nav-link text-light"> Logout </a>
+        <a href = "{% url "profile"%}" class ="nav-item mx-2 nav-link text-light"> Profile </a>
+        {%else%}
+        <a href = "{% url "register" %}" class="nav-item mx-2 nav-link text-light">Register</a>
+        <a href = "{% url "login" %}" class="nav-item mx-2 nav-link text-light"> Login</a>
+        {%endif%} {% endcomment %}
+        
+      </div>
+    </nav>
+    {% if messages %} 
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}}">{{message}}</div>
+    {%endfor%}
+     {% endif %} 
+     {% block body %} {% endblock %}
+  </body>
+</html>

@@ -1,5 +1,8 @@
-<h1>Email History for {{ subscriber.name }}</h1>
+{% extends 'email_app/base.html'%}
+{% block body %}
+<h1>Scheduled Email for {{ subscriber.name }}</h1>
 
+{% if email_history_list %}
 <ul>
     {% for entry in email_history_list %}
         <li>
@@ -11,3 +14,9 @@
         </li>
     {% endfor %}
 </ul>
+{% else %}
+ <h2> No Emails are Scheduled for {{ subscriber.name }} </h2>
+
+{% endif %}
+
+{% endblock %}

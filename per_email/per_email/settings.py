@@ -11,23 +11,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 
-# import environ
-
-# env = environ.Env()
-# environ.Env.read_env()
-
-# # Previous settings ...
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = env('EMAIL_HOST')
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-
-# # Custom setting. To email
-# RECIPIENT_ADDRESS = env('RECIPIENT_ADDRESS')
 
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -144,22 +130,13 @@ EMAIL_HOST_PASSWORD = 'tvjc bzaf prwm zken'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# settings.py
 
-# Celery configuration
-# CELERY_BROKER_URL = 'redis://127.0.0.1:6379//'  # Use your own broker URL
-# # CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # Use your own result backend URL
-# CELERY_ACCEPT_CONTENT = ['json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
-# CELERY_TIMEZONE = 'UTC'
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
@@ -174,5 +151,14 @@ CELERY_RESULT_EXTENDED = True
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 
+STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,'static')
+]
 
 
+
+CELERY_IMPORTS = [
+    'email_app.task',
+]

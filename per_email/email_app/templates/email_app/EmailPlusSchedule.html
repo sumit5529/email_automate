@@ -1,6 +1,10 @@
+{% extends 'email_app/base.html' %}
+{% block body %}
 <form method="post" action="">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Send Email</button>
   </form>
+
+{% endblock %}
   

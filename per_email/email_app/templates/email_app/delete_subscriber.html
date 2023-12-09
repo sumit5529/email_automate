@@ -1,0 +1,73 @@
+{% extends 'email_app/base.html'%}
+
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Delete Confirmation</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: offwhite;
+    
+  }
+  .confirmation-container {
+    text-align: center;
+    justify-content:center;
+    margin: auto 300px;
+   
+    
+  }
+  .confirmation-box {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    width:50vw;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    background-color:lightblue;
+    
+  }
+  h2 {
+    color: #333;
+    margin-top: 0;
+  }
+  .delete-button {
+ 
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .delete-button:hover {
+    color: white;
+    {% comment %} background-color:black; {% endcomment %}
+  }
+</style>
+</head>
+<body>
+  <div class="confirmation-container">
+    <div class="confirmation-box" style="justify-content:center">
+        <form method = "POST">
+            {% csrf_token %}
+            <h2 style = "text-align:center"> Are you sure to delete ? </h2>
+            <div style = "text-align:center" class = "delete-button"><button type = "submit" class="btn btn-secondary">Delete </button></div>
+        
+        
+        </form>
+      
+    </div>
+  </div>
+
+</body>
+
+</head>
+
+
+
+{% endblock %}
