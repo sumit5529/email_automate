@@ -13,7 +13,77 @@ from datetime import datetime, timedelta
 
 
 from django.db.models.functions import Extract
+from rest_framework import viewsets
+from .serializers import subscriber_serializer,email_plus_schedule_serializer,email_history_serializer
+from rest_framework.decorators import action,permission_classes
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
+""" apis """
+
+class subscriber_viewset(viewsets.ModelViewSet):
+    queryset = Subscriber.objects.all()
+    serializer_class = subscriber_serializer
+    # permission_classes = [IsAuthenticated]
+    # """in action if detail is true it means id is required """
+    @action(detail=True,methods=['get'])
+    def schedule_email (self,request,pk=None):
+        try:
+         subscriber = Subscriber.objects.get(pk=pk)
+         email = EmailPlusScheduleModel.objects.filter(subscriber=subscriber)
+         email_serializer = email_plus_schedule_serializer(email,many = True, context = {'request':request})
+         return Response(email_serializer.data)
+        except Exception as e:
+           return Response(
+              {
+                 'message':'This subsciber has no email scheduled'
+              }
+           )
+        
+
+    @action(detail=True,methods=['get'])
+    def past_history(self,request,pk=None):
+        try:
+         subscriber = Subscriber.objects.get(pk=pk)
+         email = EmailHistory.objects.filter(subscriber=subscriber)
+         email_serializer = email_history_serializer(email,many = True, context = {'request':request})
+         return Response(email_serializer.data)
+        except Exception as e:
+           return Response(
+              {
+                 'message':'No past History'
+              }
+           )
+         
+
+
+
+class email_plus_schedule_viewset(viewsets.ModelViewSet):
+    queryset = EmailPlusScheduleModel.objects.all()
+    serializer_class = email_plus_schedule_serializer
+
+class email_history_viewset(viewsets.ModelViewSet):
+    queryset = EmailHistory.objects.all()
+    serializer_class = email_history_serializer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+""" subscriber information"""
 
 def list_subscriber(request):
     
@@ -150,7 +220,10 @@ def EmailPlusSchedule(request,id):
 
 def delete_email(request,id):
     obj = EmailPlusScheduleModel.objects.get(id=id)
+    detail_url = reverse('email_app:email_plus_schedulelist', args=[obj.subscriber.pk])
+        
     obj.delete()
+    return redirect (detail_url)
 
 
 

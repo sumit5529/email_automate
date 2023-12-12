@@ -1,10 +1,23 @@
-from django.urls import path
+from django.urls import path,include
 from . import views
 
+from rest_framework import routers
+from .views import subscriber_viewset,email_plus_schedule_viewset,email_history_viewset
+
+
 app_name = 'email_app'
+router = routers.DefaultRouter()
+router.register(r'api_subscriber',subscriber_viewset,basename='api_subscriber')
+router.register(r'schedule_email',email_plus_schedule_viewset,basename='schedule_email')
+router.register(r'past_history',email_history_viewset,basename='past_history')
+
+
+
+
 
 urlpatterns = [
     path('', views.list_subscriber, name='list_subscriber'),
+    path('',include(router.urls)),
     path('add/', views.add_subscriber, name='add_subscriber'),
     path('update_subscriber/<int:id>/',views.update_subscriber,name='update_subscriber'),
     path('delete_subscriber/<int:id>',views.delete_subscriber,name = 'delete_subscriber'),

@@ -10,22 +10,24 @@
       <tr>
         <th>Name</th>
         <th>Email</th>
-        <th>UpdateSubscriber<th>
+        <th>UpdateSubscriber</th>
         <th>History</th>
         <th>Scheduled-Emails</th>
-        
-        <th>Delete Subscriber<th>
+        <th>Change-Emails</th>
+        <th>Delete Subscriber</th>
+        {% comment %} <th>History API </th> {% endcomment %}
+      
       </tr>
       {% for subs in subscribers %}
       <tr>
         <td>{{ subs.name }}</td>
         <td>{{ subs.email }}</td>
         <td><a href="{% url 'email_app:update_subscriber' subs.pk %}" class="btn btn-success">Update</a></td>
-        <td><a href="{% url 'email_app:email_history' subs.pk %}" class = "btn btn-info">History</a></td>
+        <td><a href="{% url 'email_app:email_history' subs.pk %}" class = "btn btn-info btn-sm">History</a></td>
         <td><a href="{% url 'email_app:next_email_history' subs.pk %}" class="btn btn-primary">ScheduleEmails</a></td>
         <td><a href="{% url 'email_app:email_plus_schedulelist' subs.pk %}" class="btn btn-secondary">ChangeSchedules</a></td>
         <td><a href="{% url 'email_app:delete_subscriber' subs.pk %}" class="btn btn-danger btn-sm">Delete</a></td>
-       
+        {% comment %} <td><a href="{% url 'email_app:api_subscriber-detail' subs.pk %}" class = "btn btn-info btn-sm">History</a></td> {% endcomment %}
       </tr>
       {% endfor %}
     </table>

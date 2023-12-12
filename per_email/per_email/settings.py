@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
     'django_crontab',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'email_app',
     'django_celery_results',
     'django_celery_beat',
+    
 ]
 
 MIDDLEWARE = [
@@ -162,3 +164,23 @@ STATICFILES_DIRS = [
 CELERY_IMPORTS = [
     'email_app.task',
 ]
+
+
+REST_FRAMEWORK = {
+    #  'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    #     'rest_framework.permissions.DjangoModelPermissions',
+    #     # Add more permission classes as needed
+    # ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        # 'rest_framework.renderers.BrowsableAPIRenderer',
+        # Add more renderer classes as needed
+    ],
+  
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+       
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
+    # )
+
+}
