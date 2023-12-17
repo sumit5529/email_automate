@@ -14,24 +14,32 @@ from datetime import datetime, timedelta
 
 from django.db.models.functions import Extract
 from rest_framework import viewsets
-from .serializers import subscriber_serializer,email_plus_schedule_serializer,email_history_serializer
+from .serializers import SubscriberSerializer,EmailPlusScheduleSerializer,EmailHistorySerializer
 from rest_framework.decorators import action,permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 """ apis """
-
+"""Subscriber's api class using modelviewset which provide by default
+get,put,post,delete etc action by default and url for these
+is adjusted by router that is defined in urls.py
+ ,"""
 class subscriber_viewset(viewsets.ModelViewSet):
     queryset = Subscriber.objects.all()
-    serializer_class = subscriber_serializer
+    serializer_class = SubscriberSerializer
+
     # permission_classes = [IsAuthenticated]
-    # """in action if detail is true it means id is required """
+
+    """in action if detail is true it means id is required. It is for individual's
+    detail like,provide api of list for individual schedule email and fun below of it 
+    provide past history
+     """
     @action(detail=True,methods=['get'])
     def schedule_email (self,request,pk=None):
         try:
          subscriber = Subscriber.objects.get(pk=pk)
          email = EmailPlusScheduleModel.objects.filter(subscriber=subscriber)
-         email_serializer = email_plus_schedule_serializer(email,many = True, context = {'request':request})
+         email_serializer = EmailPlusScheduleSerializer(email,many = True, context = {'request':request})
          return Response(email_serializer.data)
         except Exception as e:
            return Response(
@@ -46,7 +54,7 @@ class subscriber_viewset(viewsets.ModelViewSet):
         try:
          subscriber = Subscriber.objects.get(pk=pk)
          email = EmailHistory.objects.filter(subscriber=subscriber)
-         email_serializer = email_history_serializer(email,many = True, context = {'request':request})
+         email_serializer = EmailHistorySerializer(email,many = True, context = {'request':request})
          return Response(email_serializer.data)
         except Exception as e:
            return Response(
@@ -57,14 +65,15 @@ class subscriber_viewset(viewsets.ModelViewSet):
          
 
 
-
+"""This class is responsible for provinding api of Email and their scheduled time in json fromat"""
 class email_plus_schedule_viewset(viewsets.ModelViewSet):
     queryset = EmailPlusScheduleModel.objects.all()
-    serializer_class = email_plus_schedule_serializer
+    serializer_class = EmailPlusScheduleSerializer
 
+"""This class is responsible for provinding api of past email history in json fromat"""
 class email_history_viewset(viewsets.ModelViewSet):
     queryset = EmailHistory.objects.all()
-    serializer_class = email_history_serializer
+    serializer_class = EmailHistorySerializer
 
 
 
@@ -85,12 +94,15 @@ class email_history_viewset(viewsets.ModelViewSet):
 
 """ subscriber information"""
 
+""" This fun is responsible to display list of subscriber """
 def list_subscriber(request):
     
    
     subscribers = Subscriber.objects.all()
     return render(request, 'email_app/list_subscriber.html', {'subscribers': subscribers})
 
+""" Here new subscriber is added using form if with same email and username,any subsriber is already then 
+it will not accept form and show that this user already exist and ask to fill form again """
 def add_subscriber(request):
     if request.method == 'POST':
         form = SubscriberForm(request.POST)
@@ -110,7 +122,7 @@ def add_subscriber(request):
              
             return redirect('email_app:list_subscriber')  
     else:
-        messages.success(request, 'This user already exist ')
+      
         form = SubscriberForm()
     return render(request, 'email_app/add_subscriber.html', {'form': form})
 
@@ -190,7 +202,7 @@ def EmailPlusSchedule(request,id):
         form = EmailplusScheduleForm(request.POST)
         if form.is_valid():
             schedule_time = form.cleaned_data['schedule_time']
-            gap = form.cleaned_data['gap']
+            gp = form.cleaned_data['gp']
             frequency = form.cleaned_data['frequency']
             message_text = form.cleaned_data['message_text']
             subject = form.cleaned_data['subject']
@@ -200,17 +212,17 @@ def EmailPlusSchedule(request,id):
             subject = subject,
             message_text = message_text,
             schedule_time = schedule_time,
-            gap = gap,
+            gp = gp,
             frequency = frequency
           )
-            if obj :
-                print('done')
+            # if obj :
+            #     print('done')
             detail_url = reverse('email_app:email_plus_schedulelist', args=[id])
             return redirect (detail_url)
             
         
         else:
-           print('form is not valid')
+        #    print('form is not valid')
            form = EmailplusScheduleForm()
         return render(request, 'email_app/EmailPlusSchedule.html', {'form': form})
     else:
@@ -286,162 +298,6 @@ def EmailPlusScheduleChange(request, id):
 
 
 
-
-
-
-
-
-
-
-# def schedule_individual(request,id):
-#     if request.method=='POST':
-#         form = EmailForm(request.POST)
-#         if form.is_valid():
-         
-#          schedule_date = form.cleaned_data['schedule_date']
-#          schedule_time = form.cleaned_data['schedule_time']
-#          gap = form.cleaned_data['periodic_gap_day']
-#          subscriber = Subscriber.objects.get(id = id)
-#          emailobj = NextEmailHistory.objects.filter(subscriber=subscriber).first()
-#          if emailobj:
-#              emailobj.schedule_date = schedule_date
-#              emailobj.schedule_time =  schedule_time
-#              emailobj.periodic_gap_day = gap
-#              emailobj.save()
-#          else:
-#              NextEmailHistory.objects.create(subscriber=subscriber,schedule_date=schedule_date,
-                                             
-#                                         schedule_time=schedule_time,periodic_gap_day = gap)
-         
-             
-#         individual_gap(id,gap)
-#         return redirect('list_subscriber')
-        
-#     else:
-#         form = EmailForm()
-
-#     return render(request, 'email_app/email_form.html', {'form': form})
-
-
-
-# def send_email(request):
-   
-   
-
-#     if request.method == 'POST':
-#         form = EmailForm(request.POST)
-#         if form.is_valid():
-#             emailobj= EmailModel.objects.all().first()
-            
-#             subject = emailobj.subject
-#             message_text = emailobj.message_text
-#             schedule_date = form.cleaned_data['schedule_date']
-#             schedule_time = form.cleaned_data['schedule_time']
-#             periodic_gap_day = form.cleaned_data['periodic_gap_day']
-#             # inst = get_object_or_404(Subscriber)
-#             recipient_email = '20bec044@nith.ac.in'
-#             print('before sending')
-#             # rest_time = calculate_rest_time(schedule_date,schedule_time)
-#             # rest_time = int(rest_time)
-#             # print(rest_time)
-#             # revoke_old_tasks()
-#             # send_weekly_email.apply_async(args=[subject,message_text],countdown=rest_time)
-#             set_gap(periodic_gap_day)
-#             send_weekly_email()
-            
-#             print('after sending')
-          
-#             # message = message_text
-#             # email_from = settings.EMAIL_HOST_USER
-#             # recipient_list = [recipient_email,]
-#             # send_mail( subject, message, email_from, recipient_list )
-            
-          
-
-                
-
-#             return redirect('list_subscriber')
-#     else:
-#         form = EmailForm()
-
-#     return render(request, 'email_app/email_form.html', {'form': form})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def separate_date_components(schedule_date):
-    
-#     # date_object = datetime.strptime(schedule_date, '%Y-%m-%d')
-#     date_object = schedule_date
-
-    
-#     year = date_object.year
-#     month = date_object.month
-#     day = date_object.day
-
-#     return year, month, day
-
-
-# def separate_time_components(schedule_time):
-   
-#     time_object = schedule_time
-    
-#     hour = time_object.hour
-#     minute = time_object.minute
-#     second = 00
-    
-#     return hour,minute,second
-
-
-
-
-
-
-# def calculate_rest_time(schedule_date,schedule_time):
-   
-    
-#     year, month, day = separate_date_components(schedule_date)
-#     hour,minute,second = separate_time_components(schedule_time)
-    
-#     target_datetime = datetime(year, month, day, hour, minute, second).replace(microsecond=0)
-
-
- 
-#     current_datetime = datetime.now().replace(microsecond=0)
-
-
-
-#     time_difference = target_datetime - current_datetime
-
-#     rest_time_seconds = max(time_difference.total_seconds(), 0)
-
-#     return rest_time_seconds
 
 
 

@@ -2,8 +2,8 @@
 from rest_framework import serializers
 
 from .models import Subscriber,EmailHistory,EmailPlusScheduleModel
-
-class subscriber_serializer(serializers.ModelSerializer):
+"""Api of subscriber with content of username and EmailHistory"""
+class SubscriberSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
     email_count = serializers.SerializerMethodField(read_only=True)
     def get_email_count(self,subscriber):
@@ -13,19 +13,19 @@ class subscriber_serializer(serializers.ModelSerializer):
         model = Subscriber
         fields = '__all__'
         
-
-class email_plus_schedule_serializer(serializers.ModelSerializer):
+""" For providing api to frontend of Email content , schedule time,periodicity and gap"""
+class EmailPlusScheduleSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
-    subscriber = subscriber_serializer()
+    subscriber = SubscriberSerializer()
     
     class Meta:
         model = EmailPlusScheduleModel
         fields = '__all__'
         
-
-class email_history_serializer(serializers.ModelSerializer):
+""" For providing api to frontend  of sent Email (History)"""
+class EmailHistorySerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
-    subscriber = subscriber_serializer()
+    subscriber = SubscriberSerializer()
     
     class Meta:
         model = EmailHistory
