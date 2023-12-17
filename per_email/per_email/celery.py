@@ -36,22 +36,5 @@ app.conf.beat_schedule = {
     }
 }
 
-def set_gap(periodic_gap_day):
-    print('called solve')
-    periodic_gap_time = int(periodic_gap_day)
-    print(type(periodic_gap_day))
- 
-    x = f"*/{periodic_gap_time}"
-   
- 
-    app.conf.beat_schedule['send-weekly-email']['schedule'] = crontab(minute="*/15")
-
-# def individual_gap(primary_key):
-#     app.conf.beat_schedule['individual-periodic-task']['args'] = (primary_key,)
-#     app.conf.beat_schedule['individual-periodic-task']['schedule'] = crontab(minute = "*/2")
-
-# @app.task(bind=True)
-# def debug_task(self):
-#     print(f'Request: {self.request!r}')
 
 
